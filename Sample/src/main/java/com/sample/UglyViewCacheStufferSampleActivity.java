@@ -1,7 +1,6 @@
 
 package com.sample;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,7 +65,7 @@ import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.danmaku.util.IOUtils;
 import master.flame.danmaku.danmaku.util.SystemClock;
 
-public class UglyViewCacheStufferSampleActivity extends Activity implements View.OnClickListener {
+public class UglyViewCacheStufferSampleActivity extends AppCompatActivity implements View.OnClickListener {
 
     private IDanmakuView mDanmakuView;
 
@@ -121,12 +122,10 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
                         }
                         if (drawable != null) {
                             drawable.setBounds(0, 0, 100, 100);
-                            SpannableStringBuilder spannable = createSpannable(drawable);
-                            danmaku.text = spannable;
+                            danmaku.text = createSpannable(drawable);
                             if (mDanmakuView != null) {
                                 mDanmakuView.invalidateDanmaku(danmaku, false);
                             }
-                            return;
                         }
                     }
                 }.start();
@@ -165,15 +164,15 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
         }
     }
 
-    public class MyViewHolder extends ViewCacheStuffer.ViewHolder {
+    public static class MyViewHolder extends ViewCacheStuffer.ViewHolder {
 
         private final ImageView mIcon;
         private final TextView mText;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            mIcon = (ImageView) itemView.findViewById(R.id.icon);
-            mText = (TextView) itemView.findViewById(R.id.text);
+            mIcon = itemView.findViewById(R.id.icon);
+            mText = itemView.findViewById(R.id.text);
         }
 
     }
@@ -186,7 +185,7 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
         private BaseDanmaku danmaku;
         private Bitmap bitmap;
 
-        public MyImageWare(String imageUri, BaseDanmaku danmaku, int width, int height, IDanmakuView danmakuView) {
+        MyImageWare(String imageUri, BaseDanmaku danmaku, int width, int height, IDanmakuView danmakuView) {
             this(imageUri, new ImageSize(width, height), ViewScaleType.FIT_INSIDE);
             if (danmaku == null) {
                 throw new IllegalArgumentException("danmaku may not be null");
@@ -202,7 +201,7 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
             return this.id;
         }
 
-        public String getImageUri() {
+        String getImageUri() {
             return this.imageUri;
         }
 
@@ -277,14 +276,14 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
     private void findViews() {
 
         mMediaController = findViewById(R.id.media_controller);
-        mBtnRotate = (Button) findViewById(R.id.rotate);
-        mBtnHideDanmaku = (Button) findViewById(R.id.btn_hide);
-        mBtnShowDanmaku = (Button) findViewById(R.id.btn_show);
-        mBtnPauseDanmaku = (Button) findViewById(R.id.btn_pause);
-        mBtnResumeDanmaku = (Button) findViewById(R.id.btn_resume);
-        mBtnSendDanmaku = (Button) findViewById(R.id.btn_send);
-        mBtnSendDanmakuTextAndImage = (Button) findViewById(R.id.btn_send_image_text);
-        mBtnSendDanmakus = (Button) findViewById(R.id.btn_send_danmakus);
+        mBtnRotate = findViewById(R.id.rotate);
+        mBtnHideDanmaku = findViewById(R.id.btn_hide);
+        mBtnShowDanmaku = findViewById(R.id.btn_show);
+        mBtnPauseDanmaku = findViewById(R.id.btn_pause);
+        mBtnResumeDanmaku = findViewById(R.id.btn_resume);
+        mBtnSendDanmaku = findViewById(R.id.btn_send);
+        mBtnSendDanmakuTextAndImage = findViewById(R.id.btn_send_image_text);
+        mBtnSendDanmakus = findViewById(R.id.btn_send_danmakus);
         mBtnRotate.setOnClickListener(this);
         mBtnHideDanmaku.setOnClickListener(this);
         mMediaController.setOnClickListener(this);
@@ -296,18 +295,18 @@ public class UglyViewCacheStufferSampleActivity extends Activity implements View
         mBtnSendDanmakus.setOnClickListener(this);
 
         // VideoView
-        VideoView mVideoView = (VideoView) findViewById(R.id.videoview);
+        VideoView mVideoView = findViewById(R.id.videoview);
         // DanmakuView
 
         // 设置最大显示行数
-        HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
         maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 5); // 滚动弹幕最大显示5行
         // 设置是否禁止重叠
-        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
+        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
         overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
         overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 
-        mDanmakuView = (IDanmakuView) findViewById(R.id.sv_danmaku);
+        mDanmakuView = findViewById(R.id.sv_danmaku);
         mContext = DanmakuContext.create();
 
         mIconWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, getResources().getDisplayMetrics());

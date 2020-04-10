@@ -1,7 +1,6 @@
 
 package com.sample;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -11,8 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
-import master.flame.danmaku.danmaku.util.SystemClock;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,8 +20,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +33,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import master.flame.danmaku.controller.DrawHandler;
 import master.flame.danmaku.controller.IDanmakuView;
 import master.flame.danmaku.danmaku.loader.ILoader;
 import master.flame.danmaku.danmaku.loader.IllegalDataException;
@@ -50,35 +49,23 @@ import master.flame.danmaku.danmaku.model.android.SpannedCacheStuffer;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.danmaku.util.IOUtils;
+import master.flame.danmaku.danmaku.util.SystemClock;
 
-public class MainActivity extends Activity implements View.OnClickListener {
-
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private IDanmakuView mDanmakuView;
-
     private View mMediaController;
-
-    public PopupWindow mPopupWindow;
-
     private Button mBtnRotate;
-
     private Button mBtnHideDanmaku;
-
     private Button mBtnShowDanmaku;
-
     private BaseDanmakuParser mParser;
-
     private Button mBtnPauseDanmaku;
-
     private Button mBtnResumeDanmaku;
-
     private Button mBtnSendDanmaku;
-
     private Button mBtnSendDanmakuTextAndImage;
-
     private Button mBtnSendDanmakus;
+    private VideoView mVideoView;
     private DanmakuContext mContext;
     private BaseCacheStuffer.Proxy mCacheStufferAdapter = new BaseCacheStuffer.Proxy() {
-
         private Drawable mDrawable;
 
         @Override
@@ -92,7 +79,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         String url = "http://www.bilibili.com/favicon.ico";
                         InputStream inputStream = null;
                         Drawable drawable = mDrawable;
-                        if(drawable == null) {
+                        if (drawable == null) {
                             try {
                                 URLConnection urlConnection = new URL(url).openConnection();
                                 inputStream = urlConnection.getInputStream();
@@ -108,12 +95,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         }
                         if (drawable != null) {
                             drawable.setBounds(0, 0, 100, 100);
-                            SpannableStringBuilder spannable = createSpannable(drawable);
-                            danmaku.text = spannable;
-                            if(mDanmakuView != null) {
+                            danmaku.text = createSpannable(drawable);
+                            if (mDanmakuView != null) {
                                 mDanmakuView.invalidateDanmaku(danmaku, false);
                             }
-                            return;
                         }
                     }
                 }.start();
@@ -187,14 +172,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void findViews() {
 
         mMediaController = findViewById(R.id.media_controller);
-        mBtnRotate = (Button) findViewById(R.id.rotate);
-        mBtnHideDanmaku = (Button) findViewById(R.id.btn_hide);
-        mBtnShowDanmaku = (Button) findViewById(R.id.btn_show);
-        mBtnPauseDanmaku = (Button) findViewById(R.id.btn_pause);
-        mBtnResumeDanmaku = (Button) findViewById(R.id.btn_resume);
-        mBtnSendDanmaku = (Button) findViewById(R.id.btn_send);
-        mBtnSendDanmakuTextAndImage = (Button) findViewById(R.id.btn_send_image_text);
-        mBtnSendDanmakus = (Button) findViewById(R.id.btn_send_danmakus);
+        mBtnRotate = findViewById(R.id.rotate);
+        mBtnHideDanmaku = findViewById(R.id.btn_hide);
+        mBtnShowDanmaku = findViewById(R.id.btn_show);
+        mBtnPauseDanmaku = findViewById(R.id.btn_pause);
+        mBtnResumeDanmaku = findViewById(R.id.btn_resume);
+        mBtnSendDanmaku = findViewById(R.id.btn_send);
+        mBtnSendDanmakuTextAndImage = findViewById(R.id.btn_send_image_text);
+        mBtnSendDanmakus = findViewById(R.id.btn_send_danmakus);
         mBtnRotate.setOnClickListener(this);
         mBtnHideDanmaku.setOnClickListener(this);
         mMediaController.setOnClickListener(this);
@@ -206,27 +191,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mBtnSendDanmakus.setOnClickListener(this);
 
         // VideoView
-        VideoView mVideoView = (VideoView) findViewById(R.id.videoview);
+        mVideoView = findViewById(R.id.videoview);
         // DanmakuView
 
         // 设置最大显示行数
-        HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> maxLinesPair = new HashMap<>();
         maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 5); // 滚动弹幕最大显示5行
         // 设置是否禁止重叠
-        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
+        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<>();
         overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
         overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 
-        mDanmakuView = (IDanmakuView) findViewById(R.id.sv_danmaku);
+        mDanmakuView = findViewById(R.id.sv_danmaku);
         mContext = DanmakuContext.create();
         mContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
-        .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
+                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-        .setMaximumLines(maxLinesPair)
-        .preventOverlapping(overlappingEnablePair).setDanmakuMargin(40);
+                .setMaximumLines(maxLinesPair)
+                .preventOverlapping(overlappingEnablePair).setDanmakuMargin(40);
         if (mDanmakuView != null) {
             mParser = createParser(this.getResources().openRawResource(R.raw.comments));
-            mDanmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
+            mDanmakuView.setCallback(new DrawHandler.Callback() {
                 @Override
                 public void updateTimer(DanmakuTimer timer) {
                 }
@@ -282,7 +267,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     mediaPlayer.start();
                 }
             });
-            mVideoView.setVideoPath(Environment.getExternalStorageDirectory() + "/1.flv");
+
+//            mVideoView.setVideoURI();
         }
 
     }
@@ -306,16 +292,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDanmakuView != null) {
-            // dont forget release!
-            mDanmakuView.release();
-            mDanmakuView = null;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
         if (mDanmakuView != null) {
             // dont forget release!
             mDanmakuView.release();
@@ -378,7 +354,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 SystemClock.sleep(20);
             }
         }
-    };
+    }
 
     private void addDanmaku(boolean islive) {
         BaseDanmaku danmaku = mContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
@@ -405,8 +381,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         BaseDanmaku danmaku = mContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         Drawable drawable = getResources().getDrawable(R.drawable.ic_launcher);
         drawable.setBounds(0, 0, 100, 100);
-        SpannableStringBuilder spannable = createSpannable(drawable);
-        danmaku.text = spannable;
+        danmaku.text = createSpannable(drawable);
         danmaku.padding = 5;
         danmaku.priority = 1;  // 一定会显示, 一般用于本机发送的弹幕
         danmaku.isLive = islive;

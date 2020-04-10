@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -22,56 +23,64 @@
             android:id="@+id/rotate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/rotate" />
+            android:text="@string/rotate"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:id="@+id/btn_hide"
             android:layout_height="wrap_content"
-            android:text="@string/hide_danmaku" />
+            android:text="@string/hide_danmaku"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_show"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/show_danmaku" />
+            android:text="@string/show_danmaku"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_pause"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/pause_danmaku" />
+            android:text="@string/pause_danmaku"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_resume"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/resume_danmaku" />
+            android:text="@string/resume_danmaku"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_send"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/send_danmaku" />
+            android:text="@string/send_danmaku"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btn_send_image_text"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/send_danmaku_image_text" />
+            android:text="@string/send_danmaku_image_text"
+            tools:ignore="ButtonStyle" />
         
         <Button
             android:id="@+id/btn_send_danmakus"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/send_danmakus" />
+            android:text="@string/send_danmakus"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
 </FrameLayout>

@@ -194,6 +194,9 @@ public class DrawHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
+        if (mContext == null) {
+            return;
+        }
         int what = msg.what;
         switch (what) {
             case PREPARE:
