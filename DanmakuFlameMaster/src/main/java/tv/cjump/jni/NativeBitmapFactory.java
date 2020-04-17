@@ -13,63 +13,23 @@ import java.lang.reflect.Field;
 
 public class NativeBitmapFactory {
 
-    static Field nativeIntField = null;
+    private static Field nativeIntField = null;
 
-    static boolean nativeLibLoaded = false;
-    static boolean notLoadAgain = false;
+    private static boolean nativeLibLoaded = false;
+    private static boolean notLoadAgain = false;
     
-    public static boolean isInNativeAlloc() {
-        return android.os.Build.VERSION.SDK_INT < 11 || (nativeLibLoaded && nativeIntField != null);
+    static boolean isInNativeAlloc() {
+        return nativeLibLoaded && nativeIntField != null;
     }
 
     public static void loadLibs() {
         if (notLoadAgain) {
             return;
         }
-        if (!(DeviceUtils.isRealARMArch() || DeviceUtils.isRealX86Arch())) {
-            notLoadAgain = true;
-            nativeLibLoaded = false;
-            return;
-        }
-        if (nativeLibLoaded) {
-            return;
-        }
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT < 23) {
-                System.loadLibrary("ndkbitmap");
-                nativeLibLoaded = true;
-            } else {
-                notLoadAgain = true;
-                nativeLibLoaded = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            notLoadAgain = true;
-            nativeLibLoaded = false;
-        } catch (Error e) {
-            e.printStackTrace();
-            notLoadAgain = true;
-            nativeLibLoaded = false;
-        }
-        if (nativeLibLoaded) {
-            boolean libInit = init();
-            if (!libInit) {
-                release();
-                notLoadAgain = true;
-                nativeLibLoaded = false;
-            } else {
-                initField();
-                boolean confirm = testLib();
-                if (!confirm) {
-                    // 测试so文件函数是否调用失败
-                    release();
-                    notLoadAgain = true;
-                    nativeLibLoaded = false;
-                }
-            }
-        }
+        notLoadAgain = true;
+        nativeLibLoaded = false;
 
-        Log.e("NativeBitmapFactory", "loaded" + nativeLibLoaded);
+        Log.v("NativeBitmapFactory", "will not load ndkbitmap");
     }
 
     public static synchronized void releaseLibs() {
@@ -82,7 +42,7 @@ public class NativeBitmapFactory {
         // Log.e("NativeBitmapFactory", "released");
     }
 
-    static void initField() {
+    private static void initField() {
         try {
             nativeIntField = Bitmap.Config.class.getDeclaredField("nativeInt");
             nativeIntField.setAccessible(true);
@@ -98,7 +58,7 @@ public class NativeBitmapFactory {
             return false;
         }
         Bitmap bitmap = null;
-        Canvas canvas = null;
+        Canvas canvas;
         try {
             bitmap = createNativeBitmap(2, 2, Bitmap.Config.ARGB_8888, true);
             boolean result = (bitmap != null && bitmap.getWidth() == 2 && bitmap.getHeight() == 2);
@@ -126,12 +86,11 @@ public class NativeBitmapFactory {
         } finally {
             if (bitmap != null) {
                 bitmap.recycle();
-                bitmap = null;
             }
         }
     }
 
-    public static int getNativeConfig(Bitmap.Config config) {
+    private static int getNativeConfig(Bitmap.Config config) {
         try {
             if (nativeIntField == null) {
                 return 0;
@@ -153,7 +112,7 @@ public class NativeBitmapFactory {
         bitmap.recycle();
     }
 
-    public static synchronized Bitmap createBitmap(int width, int height, Bitmap.Config config, boolean hasAlpha) {
+    private static synchronized Bitmap createBitmap(int width, int height, Bitmap.Config config, boolean hasAlpha) {
         if (!nativeLibLoaded || nativeIntField == null) {
             // Log.e("NativeBitmapFactory", "ndk bitmap create failed");
             return Bitmap.createBitmap(width, height, config);

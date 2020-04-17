@@ -18,8 +18,8 @@ public class DeviceUtils {
 
     public static final String ABI_MIPS = "mips";
 
-    public static enum ARCH {
-        Unknown, ARM, X86, MIPS, ARM64,
+    public enum ARCH {
+        Unknown, ARM, X86, MIPS, ARM64, X86_64
     }
 
     private static ARCH sArch = ARCH.Unknown;
@@ -29,6 +29,7 @@ public class DeviceUtils {
     private static final int EM_386 = 3;
     private static final int EM_MIPS = 8;
     private static final int EM_AARCH64 = 183;
+    private static final int EM_X86_64 = 62;
 
     // /system/lib/libc.so
     // XXX: need a runtime check
@@ -54,6 +55,8 @@ public class DeviceUtils {
                     case EM_AARCH64:
                         sArch = ARCH.ARM64;
                         break;
+                    case EM_X86_64:
+                        sArch = ARCH.X86_64;
                     default:
                         Log.e("NativeBitmapFactory", "libc.so is unknown arch: " + Integer.toHexString(machine));
                         break;

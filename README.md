@@ -26,7 +26,8 @@ android上开源弹幕解析绘制引擎项目。
 ### TODO:
 
 - 增加OpenGL ES绘制方式
-- 64位原生库
+- ~~64位原生库~~ 因为 https://github.com/bilibili/DanmakuFlameMaster/blob/e2846461a09e33720a049f628f09c653f55531f0/DanmakuFlameMaster/src/main/java/tv/cjump/jni/NativeBitmapFactory.java#L38
+在 API >= 23 的设备上没有必要
 
 ### Download (不建议)
 
@@ -37,7 +38,10 @@ repositories {
 
 dependencies {
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
+
+    //只在 API < 23 的设备上可用
     implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.25'
+    implementation 'com.github.ctiao:ndkbitmap-armv5:0.9.25'
     implementation 'com.github.ctiao:ndkbitmap-x86:0.9.25'
 }
 ```

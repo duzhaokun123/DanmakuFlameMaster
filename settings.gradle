@@ -1,1 +1,2 @@
-include ':DanmakuFlameMaster', ':Sample', ':ndkbitmap-armv7a', ':ndkbitmap-x86'
+include ':DanmakuFlameMaster', ':Sample'
+//include  ':ndkbitmap-armv7a', ':ndkbitmap-x86', ':ndkbitmap-arm64'
