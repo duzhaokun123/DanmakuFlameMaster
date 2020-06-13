@@ -22,12 +22,12 @@ group = GROUP
 version = VERSION_NAME
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionName VERSION_NAME
         versionCode Integer.parseInt(VERSION_CODE)
     }
