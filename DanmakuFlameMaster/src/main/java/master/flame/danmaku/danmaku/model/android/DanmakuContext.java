@@ -52,15 +52,15 @@ public class DanmakuContext implements Cloneable {
     /**
      * 弹幕显示隐藏设置
      */
-    public boolean FTDanmakuVisibility = true;
+    private boolean FTDanmakuVisibility = true;
 
-    public boolean FBDanmakuVisibility = true;
+    private boolean FBDanmakuVisibility = true;
 
-    public boolean L2RDanmakuVisibility = true;
+    private boolean L2RDanmakuVisibility = true;
 
-    public boolean R2LDanmakuVisibility = true;
+    private boolean R2LDanmakuVisibility = true;
 
-    public boolean SpecialDanmakuVisibility = true;
+    private boolean SpecialDanmakuVisibility = true;
 
     List<Integer> mFilterTypes = new ArrayList<Integer>();
 
@@ -604,7 +604,7 @@ public class DanmakuContext implements Cloneable {
      * @param pairs map<K,V> 设置null恢复默认设置,默认为允许重叠
      *              K = (BaseDanmaku.TYPE_SCROLL_RL|BaseDanmaku.TYPE_SCROLL_LR|BaseDanmaku.TYPE_FIX_TOP|BaseDanmaku.TYPE_FIX_BOTTOM)
      *              V = true 不允许重
-     *                  false 允许重合
+     *              false 允许重合
      * @return
      */
     public DanmakuContext preventOverlapping(Map<Integer, Boolean> pairs) {
