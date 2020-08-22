@@ -22,13 +22,13 @@ dependencies {
     implementation project(':DanmakuFlameMaster')
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 
 //    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.6.2'
 }
 android {
     compileSdkVersion 29
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         minSdkVersion 25

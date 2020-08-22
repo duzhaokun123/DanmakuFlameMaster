@@ -23,7 +23,7 @@ version = VERSION_NAME
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         minSdkVersion 14
