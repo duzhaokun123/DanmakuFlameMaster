@@ -1,6 +1,9 @@
 DanmakuFlameMaster
 ==================
 
+# 已弃用
+使用 [DanmakuView](https://github.com/duzhaokun123/DanmakuView)
+
 android上开源弹幕解析绘制引擎项目。
 
 ### DFM Inside: 
